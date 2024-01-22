@@ -28,19 +28,20 @@ class DishDetailsController {
     const dishDetailsAll = await knex("dishDetails")
         .where("user_id", user_id)
         .select(["id", "created_at", "updated_at", "status"]);
+        console.log("dishDetailsAll:", dishDetailsAll);
 
     const dishesWithMeals = await Promise.all(dishDetailsAll.map(async detail => {
+      console.log("Fetching items for dishDetails_id:", detail.id);
         const items = await knex("selected")
-            .where("dishDetails_id", detail.id)
+            .innerJoin("meals", "selected.meal_id", "meals.id")
+            .where("selected.dishDetails_id", detail.id)
             .select([
                 "meals.name as meal_name",
                 "selected.amount",
-                "selected.unitPrice",
-                "selected.total_price",
-                "selected.meal_id"
-            ])
-            .innerJoin("meals", "meals.id", "selected.meal_id");
-
+                "selected.unit_price",
+                "selected.total_price"
+            ]);
+            console.log(`Items after join for dishDetails_id ${detail.id}:`, items);
         return {
             ...detail,
             items
@@ -48,24 +49,24 @@ class DishDetailsController {
     }));
 
     return response.json(dishesWithMeals);
-  }
+}
 
-  async index(request, response) {
+async index(request, response) {
   const dishDetailsAll = await knex("dishDetails")
       .select(["id", "created_at", "updated_at", "status"]);
-
+      console.log("dishDetailsAll:", dishDetailsAll);
   const dishesWithMeals = await Promise.all(dishDetailsAll.map(async detail => {
+    console.log("Fetching items for dishDetails_id:", detail.id);
       const items = await knex("selected")
-          .where("dishDetails_id", detail.id)
+          .innerJoin("meals", "selected.meal_id", "meals.id")
+          .where("selected.dishDetails_id", detail.id)
           .select([
               "meals.name as meal_name",
               "selected.amount",
-              "selected.unitPrice",
-              "selected.total_price",
-              "selected.meal_id"
-          ])
-          .innerJoin("meals", "meals.id", "selected.meal_id");
-
+              "selected.unit_price",
+              "selected.total_price"
+          ]);
+          console.log(`Items after join for dishDetails_id ${detail.id}:`, items);
       return {
           ...detail,
           items
@@ -73,7 +74,8 @@ class DishDetailsController {
   }));
 
   return response.json(dishesWithMeals);
-  }
+}
+
 
   async update(request, response) {
     const { id } = request.params;
