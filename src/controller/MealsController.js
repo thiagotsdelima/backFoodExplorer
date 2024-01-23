@@ -127,7 +127,7 @@ class MealsController {
             }
         
             const mealsWithSeasoning = await Promise.all(meals.map(async meal => {
-                const mealSeasonings = await knex("seasoning").where({ meal_id: meal.id });
+            const mealSeasonings = await knex("seasoning").where({ meal_id: meal.id });
                 return {
                     ...meal,
                     seasonings: mealSeasonings
