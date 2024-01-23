@@ -4,11 +4,19 @@ const knex = require("../database/knex");
 class MealsController {
         async create(request, response) {
             const { name, description, price, category_name, seasoning } = request.body;
-    
+        
+            
+            const examineDish = await knex("meals").where({ name });
+            if (examineDish.length > 0) {
+                throw new AppError("This meal already exists.", 401);
+            } 
+        
+            
             const found = await knex("drinkEat").where({ name: category_name }).first();
             if (!found) {
                 throw new AppError("This category does not exist", 401);
             }
+        
         
             const [meal_id] = await knex("meals").insert({
                 name,
@@ -17,6 +25,7 @@ class MealsController {
                 category_id: found.id,
             });
         
+            
             if (seasoning && seasoning.trim().length > 0) {
                 const seasoningArray = seasoning.split(","); 
                 const seasoningInserts = seasoningArray.map(singleSeasoning => {
