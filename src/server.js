@@ -1,33 +1,37 @@
 require("express-async-errors");
 const migrationsRun = require("./database/sqlite/migrations");
 const AppError = require("./utils/AppError");
-// Here I paste everything I have from the express file onto the page
 const express = require('express');
 const routes = require('./routes');
+const uploadConfig = require("./configs/upload");
+
 
 migrationsRun();
 
-// boot express
+
 const app = express();
 app.use(express.json());
 
+
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
+
 app.use(routes);
 
-app.use((error, request, response, next ) => {
-if(error instanceof AppError) {
-  return response.status(error.statusCode).json({
+
+app.use((error, request, response, next) => {
+  if(error instanceof AppError) {
+    return response.status(error.statusCode).json({
+      status: "error",
+      message: error.message
+    });
+  }
+
+  console.error(error);
+
+  return response.status(500).json({
     status: "error",
-    message: error.message
+    message: "Internal server error",
   });
-}
-
-console.error(error);
-
-
-return response.status(500).json({
-  status: "error",
-  message: "Internal server error",
-});
 });
 
 const PORT = 3333;

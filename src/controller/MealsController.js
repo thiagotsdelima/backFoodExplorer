@@ -54,32 +54,39 @@ class MealsController {
         async update(request, response) { 
             const { id } = request.params;
             const { name, description, price, category_name, seasoning } = request.body;
-
-            let filename;
+        
+            
+            const meal = await knex("meals").where({ id }).first();
+            if (!meal) {
+                throw new AppError("This meal does not exist.", 404);
+            }
+        
+            let filename = meal.photo_food; 
             if (request.file) {
+                
+                if (meal.photo_food) {
+                    await diskStorage.deleteFile(meal.photo_food);
+                }
+                
                 filename = await diskStorage.saveFile(request.file.filename);
             }
-          
-            const meal = await knex("meals").where({ id }).first();
+        
+            
             const found = await knex("drinkEat").where({ name: category_name }).first();
-        
-            if (!meal) {
-              throw new AppError("This meal does not exist.", 404);
-            }
-        
+            
+            
             await knex("meals").where({ id: meal.id }).update({
-              name: name ?? meal.name,
-              description: description ?? meal.description,
-              price: price ?? meal.price,
-              photo_food: filename ?? meal.photo_food,
-              category_id: found ? found.id : meal.category_id,
+                name: name ?? meal.name,
+                description: description ?? meal.description,
+                price: price ?? meal.price,
+                photo_food: filename,
+                category_id: found ? found.id : meal.category_id,
             });
         
+            
             if (seasoning) {
                 await knex("seasoning").where({ meal_id: meal.id }).delete();
-        
                 const seasoningArray = Array.isArray(seasoning) ? seasoning : seasoning.split(",");
-            
                 for (const singleSeasoning of seasoningArray) {
                     await knex("seasoning").insert({
                         meal_id: meal.id,
@@ -89,7 +96,7 @@ class MealsController {
             }
         
             return response.status(200).json({ message: "Meal updated successfully" });
-        }
+        }        
         
         async show(request, response) {
             const { id } = request.params;
