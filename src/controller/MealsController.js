@@ -1,11 +1,20 @@
 const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
+const DiskStorage = require("../providers/DiskStorage");
+
+const diskStorage = new DiskStorage
 
 class MealsController {
         async create(request, response) {
             const { name, description, price, category_name, seasoning } = request.body;
-        
-            
+
+            let filename;
+            if (request.file) {
+                filename = await diskStorage.saveFile(request.file.filename);
+            } else {
+                throw new AppError("A photo of the meal is required.", 400);
+            }
+
             const examineDish = await knex("meals").where({ name });
             if (examineDish.length > 0) {
                 throw new AppError("This meal already exists.", 401);
@@ -22,6 +31,7 @@ class MealsController {
                 name,
                 description,
                 price,
+                photo_food: filename,
                 category_id: found.id,
             });
         
@@ -38,12 +48,17 @@ class MealsController {
                 await knex("seasoning").insert(seasoningInserts);
             }
         
-            return response.json();
+            return response.status(201).json({ message: "Meal created successfully", meal_id: meal_id });
         }
     
         async update(request, response) { 
             const { id } = request.params;
             const { name, description, price, category_name, seasoning } = request.body;
+
+            let filename;
+            if (request.file) {
+                filename = await diskStorage.saveFile(request.file.filename);
+            }
           
             const meal = await knex("meals").where({ id }).first();
             const found = await knex("drinkEat").where({ name: category_name }).first();
@@ -56,6 +71,7 @@ class MealsController {
               name: name ?? meal.name,
               description: description ?? meal.description,
               price: price ?? meal.price,
+              photo_food: filename ?? meal.photo_food,
               category_id: found ? found.id : meal.category_id,
             });
         
@@ -72,7 +88,7 @@ class MealsController {
                 }
             }
         
-            return response.status(201).json();
+            return response.status(200).json({ message: "Meal updated successfully" });
         }
         
         async show(request, response) {

@@ -37,6 +37,7 @@ class DishDetailsController {
             .where("selected.dishDetails_id", detail.id)
             .select([
                 "meals.name as meal_name",
+                "meals.photo_food",
                 "selected.amount",
                 "selected.unit_price",
                 "selected.total_price"
@@ -49,32 +50,33 @@ class DishDetailsController {
     }));
 
     return response.json(dishesWithMeals);
-}
+  }
 
-async index(request, response) {
-  const dishDetailsAll = await knex("dishDetails")
-      .select(["id", "created_at", "updated_at", "status"]);
-     
-  const dishesWithMeals = await Promise.all(dishDetailsAll.map(async detail => {
-    
-      const items = await knex("selected")
-          .innerJoin("meals", "selected.meal_id", "meals.id")
-          .where("selected.dishDetails_id", detail.id)
-          .select([
-              "meals.name as meal_name",
-              "selected.amount",
-              "selected.unit_price",
-              "selected.total_price"
-          ]);
-          
-      return {
-          ...detail,
-          items
-      };
-  }));
+  async index(request, response) {
+    const dishDetailsAll = await knex("dishDetails")
+        .select(["id", "created_at", "updated_at", "status"]);
+      
+    const dishesWithMeals = await Promise.all(dishDetailsAll.map(async detail => {
+      
+        const items = await knex("selected")
+            .innerJoin("meals", "selected.meal_id", "meals.id")
+            .where("selected.dishDetails_id", detail.id)
+            .select([
+                "meals.name as meal_name",
+                "meals.photo_food",
+                "selected.amount",
+                "selected.unit_price",
+                "selected.total_price"
+            ]);
+            
+        return {
+            ...detail,
+            items
+        };
+    }));
 
-  return response.json(dishesWithMeals);
-}
+    return response.json(dishesWithMeals);
+  }
 
 
   async update(request, response) {

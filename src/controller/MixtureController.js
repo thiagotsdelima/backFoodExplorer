@@ -24,45 +24,45 @@ class MixtureController {
     });
 
     return response.status(200).json();
-  }
+    }
 
   async index(request, response) {
-    const user_id = request.user.id;
+      const user_id = request.user.id;
 
-    const mixture = await knex("mixture")
-      .innerJoin("meals", "mixture.meal_id", "meals.id")
-      .where("mixture.user_id", user_id)
-      .select("meals.*")
-      .groupBy("meal_id");
+      const mixture = await knex("mixture")
+          .innerJoin("meals", "mixture.meal_id", "meals.id")
+          .where("mixture.user_id", user_id)
+          .select("meals.*") 
+          .groupBy("meal_id");
 
-    return response.json(mixture);
-  }
+      return response.json(mixture);
+    }
+
 
   async show(request, response) {
     const user_id = request.user.id;
-    
 
     const mixture = await knex("mixture")
-      .innerJoin("meals", "mixture.meal_id", "meals.id")
-      .where("mixture.user_id", user_id)
-      .select("meals.*")
-      .groupBy("meal_id");
+        .innerJoin("meals", "mixture.meal_id", "meals.id")
+        .where("mixture.user_id", user_id)
+        .select("meals.*") 
+        .groupBy("meal_id");
 
-    if (!mixture) {
-      throw new AppError("Favorite dish not found for this user.");
+    if (!mixture.length) { 
+        throw new AppError("Favorite dish not found for this user.");
     }
 
     return response.json(mixture);
-  }
+    }
   
   async delete(request, response) {
-    const user_id = request.user.id;
-    const { id } = request.params;
+      const user_id = request.user.id;
+      const { id } = request.params;
 
-    await knex("mixture").where({ meal_id: id, user_id }).delete();
+      await knex("mixture").where({ meal_id: id, user_id }).delete();
 
-    return response.json();
-}
+      return response.json();
+    }
 }
 
 module.exports = MixtureController;
