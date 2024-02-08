@@ -1,12 +1,12 @@
 const { hash, compare } = require("bcryptjs")
 const AppError = require("../utils/AppError");
-const sqliteConnection = require("../database/sqlite");
+const knex = require("../database/knex");
 
 class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body;
-    const database = await sqliteConnection();
-    const checkUserExists = await database.get('SELECT * FROM users WHERE email = (?)', [email]);
+    const checkUserExists = await knex('users').where({ email }).first();
+
 
     if(checkUserExists) {
       throw new AppError("This email is already in use.");
@@ -16,7 +16,11 @@ class UsersController {
     const hashedPassword = await hash(password, 8)
 
 
-    await database.run("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hashedPassword]);
+    const [user_id] = await knex("users").insert({
+      name,
+      email,
+      password: hashedPassword
+    });
 
     return response.status(201).json();
   }
@@ -25,44 +29,37 @@ class UsersController {
     const { name, email, password, old_password } = request.body;
     const user_id = request.user.id;
 
-    const database = await sqliteConnection();
-    const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id]);
+    const user = await knex('users').where({ id: user_id }).first();
    
-    if(!user) {
+    if (!user) {
       throw new AppError("User not found");
     }
 
-    const userWithUpdateEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email]);
-    if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-      throw new AppError("This email is already in use.");
-
+    if (email && email !== user.email) {
+      const userWithUpdateEmail = await knex('users').where({ email }).first();
+      if (userWithUpdateEmail) {
+        throw new AppError("This email is already in use.");
+      }
     }
 
-    user.name = name ?? user.name;
-    user.email = email ?? user.email;
-
-    if (password && !old_password) {
-      throw new AppError("You need to enter the old password to set the new password");
-    }
+    const updatedUser = {
+      name: name ?? user.name,
+      email: email ?? user.email,
+    };
 
     if (password && old_password) {
       const checkOldPassword = await compare(old_password, user.password);
-      if(!checkOldPassword) {
-        throw new AppError("password error");
-
+      if (!checkOldPassword) {
+        throw new AppError("Old password does not match.");
       }
-      user.password = await hash(password, 8);
+      updatedUser.password = await hash(password, 8);
+    } else if (password && !old_password) {
+      throw new AppError("You need to enter the old password to set the new password.");
     }
 
-    await database.run(`
-    UPDATE users SET 
-    name = ?, 
-    email = ?, 
-    password = ?,
-    updated_at = DATETIME('now')
-    WHERE id = ?`, [user.name, user.email, user.password, user_id]
-    );
-    return response.json();
+    await knex('users').where({ id: user_id }).update(updatedUser);
+    
+    return response.status(204).send();
   }
 }
 
