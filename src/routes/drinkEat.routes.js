@@ -6,10 +6,14 @@ const verifyUserAuthorization = require("../middlewares/verifyUserAuthorization"
 const drinkEatRoutes = Router();
 
 const drinkEatController = new DrinkEatController();
-drinkEatRoutes.use(verifyUserAuthorization("admin"));
 
 
-drinkEatRoutes.post("/", drinkEatController.create);
-drinkEatRoutes.delete("/:id", ensureAuthenticated, drinkEatController.delete);
+drinkEatRoutes.use(ensureAuthenticated);
+
+
+drinkEatRoutes.post("/", verifyUserAuthorization("admin"), drinkEatController.create);
+drinkEatRoutes.delete("/:id", verifyUserAuthorization("admin"), drinkEatController.delete);
+
+
 
 module.exports = drinkEatRoutes;
