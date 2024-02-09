@@ -15,7 +15,7 @@ mealsRoutes.use(ensureAuthenticated);
 mealsRoutes.post("/", verifyUserAuthorization("admin"), upload.single("photo_food"), mealsController.create);
 mealsRoutes.put("/:id", verifyUserAuthorization("admin"), upload.single("photo_food"), mealsController.update);
 mealsRoutes.delete("/:id", verifyUserAuthorization("admin"), mealsController.delete);
-mealsRoutes.get("/:id", verifyUserAuthorization(["customer", "admin"]), mealsController.show);
-mealsRoutes.get("/", verifyUserAuthorization(["customer", "admin"]), mealsController.index);
+mealsRoutes.get("/:id", mealsController.show);
+mealsRoutes.get("/", mealsController.index);
 
 module.exports = mealsRoutes;
