@@ -85,7 +85,6 @@ Install my-project com npm
 
   * npm install
     npm install styled-components
-    npm install react-icons --save
     npm install react-router-dom
 
    information:
