@@ -7,6 +7,7 @@ const { sign } = require("jsonwebtoken");
 class SessionsController {
   async create(request, response) {
     const { email, password } = request.body;
+   
     const user = await knex("users").where({ email }).first();
     if(!user) {
       throw new AppError("email and/or password incorrect", 401);
@@ -23,7 +24,16 @@ class SessionsController {
       expiresIn
     })
 
-    return response.json({ user, token });
+    response.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 15 * 60 * 1000 // tempo de validade do cookies, definodo 15min
+      });
+
+      delete user.password;
+
+    return response.json({ user });
   }
 }
 
