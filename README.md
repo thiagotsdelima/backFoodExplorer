@@ -67,13 +67,13 @@ This project is a complete application for management and ordering in a restaura
 ## Responsiveness and Animations
 The application is fully responsive, adapting to different screen sizes and devices, and includes transitions and transformations for a fluid user experience.
 
-## Instalação
+## Installing
 
-### Dependências
+### Dependencies
 
 To start working with the "FoogExplorer" project, follow these installation steps:
    
-### Instalação das Dependências do Projeto
+### Installing Project Dependencies
 
 After the project is created, go to the newly created directory and install the necessary dependencies:
 
@@ -103,7 +103,7 @@ Install my-project com npm
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/thiago-sombra-8a875b137/)
 [![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/thiagotsdelima)
 
-## Autor(es)
+## Author(es)
 thiago Sombra
 
 ## Feedback
