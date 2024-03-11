@@ -108,8 +108,8 @@ thiago Sombra
 
 ## Feedback
 
-- Avaliação das Funcionalidades
-- Qualidade do Código
-- Segurança
+- Functionality Assessment
+- Code Quality
+- Security
 
-Sugestões de melhorias ou relatos de problemas são bem-vindos. Contribuições por meio de Pull Requests
+Suggestions for improvements or reports of problems are welcome. Contributions through Pull Requests
