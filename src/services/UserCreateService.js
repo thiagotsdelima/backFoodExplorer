@@ -13,7 +13,7 @@ const checkUserExists = await this.userRepository.findByEmail(email);
 
 
 if(checkUserExists) {
-  throw new AppError("Este email já está em uso.")
+  throw new AppError("This email is already in use.")
 }
 
 const hashedPassword = await hash(password, 8)
