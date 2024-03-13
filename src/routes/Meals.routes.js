@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const MealsController = require("../controller/MealsController");
+const MealImageController = require("../controller/MealImageController");
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
-const mealImageController = require("../controller/MealImageController");
 const verifyUserAuthorization = require("../middlewares/verifyUserAuthorization");
 const uploadConfig = require("../configs/upload");
 const multer = require("multer");
