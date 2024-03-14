@@ -13,10 +13,6 @@ CRUD (Create, Read, Update, Delete): Provides full CRUD functionalities, allowin
 
 Search and Filtering: Includes advanced search and filtering options, making discovering specific content quick and simple.
 
-Tag Management: Facilitates the organization and categorization of content through a tag system, improving the navigability and relevance of search results.
-
-Integration with External APIs: Leverages the power of external APIs to enrich the application with additional data and functionality, expanding capabilities beyond internal content.
-
 Friendly User Interface: Developed with a responsive and intuitive design, ensuring a great user experience on different devices and screen sizes.
 
 Good Development Practices: Built following software development industry best practices and standards, including clean code, detailed documentation, and comprehensive testing.
@@ -92,8 +88,8 @@ Install my-project com npm
   * git status
   * git diff
     execução: 
-  * npm run migrate
   * npm run dev
+  * npm run migrate
 ```
 
 
