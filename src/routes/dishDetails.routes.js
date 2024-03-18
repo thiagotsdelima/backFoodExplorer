@@ -7,7 +7,7 @@ const dishDetailsRoutes = Router();
 const dishDetailsController = new DishDetailsController();
 dishDetailsRoutes.use(ensureAuthenticated);
 
-dishDetailsRoutes.post("/:meal_id", dishDetailsController.create);
+dishDetailsRoutes.post("/", dishDetailsController.create);
 dishDetailsRoutes.put("/:id", dishDetailsController.update);
 dishDetailsRoutes.get("/:id", dishDetailsController.show);
 dishDetailsRoutes.get("/", dishDetailsController.index);

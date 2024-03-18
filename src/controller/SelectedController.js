@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError");
 
   class SelectedController {
     async create(request, response) {
-      const { items, dishDetails_id } = request.body;
+      const { items } = request.body; 
       
       await knex.transaction(async trx => {
         const itemsToInsert = items.map(item => {
@@ -12,7 +12,7 @@ const AppError = require("../utils/AppError");
           }
           const newItem = {
               amount: item.amount,
-              dishDetails_id,
+              dishDetails_id: item.dishDetails_id,
               meal_id: item.meal_id,
               unit_price: item.unit_price,
               total_price: item.unit_price * item.amount

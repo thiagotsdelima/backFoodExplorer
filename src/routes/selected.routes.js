@@ -7,7 +7,7 @@ const selectedRoutes = Router();
 const selectedController = new SelectedController();
 selectedRoutes.use(ensureAuthenticated);
 
-selectedRoutes.post("/:meal_id", selectedController.create);
+selectedRoutes.post("/", selectedController.create);
 selectedRoutes.put("/:id", selectedController.update);
 selectedRoutes.delete("/:id", selectedController.delete);
 
