@@ -32,17 +32,28 @@ This project is a complete application for management and ordering in a restaura
 * Favorites: Option for users to mark dishes as favorites.
 * Order Management: The administrator controls the status of orders through a select field.
 
+## Configuração
+
+To run this project, you need to add the following variables to your .env:
+
+- `AUTH_SECRET` - your JWT secret key
+- `PORT` - port on which the API will run
+
 ## technologies
 
 🧠 Cookie-parser
 
 🤔 Cors
 
+🧠 JWT
+
+⚡️ Express-async-errors
+
 😄 multer
 
 ⚡️ moment-timezone
 
-👩‍💻 Nodejs
+👩‍💻 Node
 
 🧠 knex
 
@@ -59,6 +70,11 @@ This project is a complete application for management and ordering in a restaura
 ⚡️ Vscode
 
 🧠 Insomnia
+
+## Deploy
+
+The API is hosted at [Render](https://render.com/pricing) and can be accessed through the following link:
+[https://backfoodexplorer.onrender.com]
 
 ## Responsiveness and Animations
 The application is fully responsive, adapting to different screen sizes and devices, and includes transitions and transformations for a fluid user experience.
@@ -87,7 +103,11 @@ Install my-project com npm
   * git config --list
   * git status
   * git diff
-    execução: 
+
+   Running the tests:
+  * npm run test
+
+   execução: 
   * npm run dev
   * npm run migrate
 ```
